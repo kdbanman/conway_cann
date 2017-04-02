@@ -16,6 +16,8 @@ public class ReferenceEnvironment : MonoBehaviour {
 
 	private GameObject[,] cells;
 
+	private int lastFrameTriggerStepped;
+
 	void Start () {
 		conways = new Conways(width, height);
 		cells = new GameObject[width, height];
@@ -61,8 +63,22 @@ public class ReferenceEnvironment : MonoBehaviour {
 			}
 		}
 
-		if (autoRun || Input.GetKey(KeyCode.Space) || Input.GetKeyDown(KeyCode.RightArrow)) {
+		if (autoRun ||
+			Input.GetKey(KeyCode.Space) ||
+			Input.GetKeyDown(KeyCode.RightArrow) ||
+			OVRInput.GetDown(OVRInput.Button.Three | OVRInput.Button.One)) {
+
 			conways.Step();
+		}
+
+		float triggerPull = Mathf.Max(
+			OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.LTouch),
+			OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch)
+		);
+
+		if (triggerPull > 0.01f && (Time.frameCount - lastFrameTriggerStepped) >= Mathf.FloorToInt(Mathf.Lerp(120f, 1f, triggerPull))) {
+			conways.Step();
+			lastFrameTriggerStepped = Time.frameCount;
 		}
 	}
 }

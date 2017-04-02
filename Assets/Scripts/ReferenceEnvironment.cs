@@ -10,7 +10,7 @@ public class ReferenceEnvironment : MonoBehaviour {
 
 	public float cellSize, cellStride;
 
-	public GameObject cellPrefab, backPlane;
+	public GameObject cellPrefab;
 
 	public bool autoRun;
 
@@ -24,17 +24,14 @@ public class ReferenceEnvironment : MonoBehaviour {
 			for (int y = 0; y < height; y++) {
 				GameObject cell = (GameObject)Instantiate(cellPrefab);
 				cells[x, y] = cell;
+				cell.GetComponent<StateCell>().x = x;
+				cell.GetComponent<StateCell>().y = y;
 				cell.transform.parent = this.transform;
 
-				cell.transform.localScale = new Vector3(cellSize, cellSize, cellSize);
+				cell.transform.localScale = new Vector3(cellSize, cellSize, cellSize / 3);
 				cell.transform.localPosition = new Vector3(x * cellStride, y * cellStride);
 			}
 		}
-
-		backPlane.transform.parent = this.transform;
-
-		backPlane.transform.localPosition = new Vector3((width - 1) * cellStride / 2, (height - 1) * cellStride / 2);
-		backPlane.transform.localScale = new Vector3(width * cellStride / 10, 1, height * cellStride / 10);
 
 
 		conways[12, 10] = 1;
@@ -45,13 +42,26 @@ public class ReferenceEnvironment : MonoBehaviour {
 	}
 
 	void Update () {
-		for (int x = 0; x < width; x ++) {
-			for (int y = 0; y < height; y++) {
-				cells[x, y].GetComponent<StateCube>().SetState(conways[x, y]);
+		if (Input.GetMouseButtonDown(0)) {
+			RaycastHit hit = new RaycastHit();
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			if (Physics.Raycast(ray, out hit)) {
+				StateCell clickedCell = hit.transform.gameObject.GetComponent<StateCell>();
+				if (clickedCell != null) {
+					int x = clickedCell.x;
+					int y = clickedCell.y;
+					conways[x, y] = conways[x, y] == 0 ? 1 : 0;
+				}
 			}
 		}
 
-		if (autoRun || Input.GetKey(KeyCode.Space)) {
+		for (int x = 0; x < width; x ++) {
+			for (int y = 0; y < height; y++) {
+				cells[x, y].GetComponent<StateCell>().SetState(conways[x, y]);
+			}
+		}
+
+		if (autoRun || Input.GetKey(KeyCode.Space) || Input.GetKeyDown(KeyCode.RightArrow)) {
 			conways.Step();
 		}
 	}

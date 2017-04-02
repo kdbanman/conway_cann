@@ -8,8 +8,6 @@ public class ReferenceEnvironment : MonoBehaviour {
 
 	public int width, height;
 
-	public float cellSize, cellStride;
-
 	public bool autoRun;
 
 	private GameObject[,] cells;
@@ -25,6 +23,11 @@ public class ReferenceEnvironment : MonoBehaviour {
 		conways[11, 12] = 1;
 		conways[10, 11] = 1;
 
+		conways[-1, 0] = 1;
+		conways[0, 0] = 1;
+		conways[1, 0] = 1;
+
+		GetComponent<CellTorus>().SetPlaneSize(width, height);
 		GetComponent<CellTorus>().automata = conways;
 	}
 

@@ -43,11 +43,19 @@ public class Conways : IAutomata {
 
 	public float this[int x, int y] {
 		get {
-			return env[x, y];
+			return env[GetToroidalX(x), GetToroidalY(y)];
 		}
 		set {
-			env[x, y] = value;
+			env[GetToroidalX(x), GetToroidalY(y)] = value;
 		}
+	}
+
+	private int GetToroidalX(int x) {
+		return (x + width) % width;
+	}
+
+	private int GetToroidalY(int y) {
+		return (y + height) % height;
 	}
 
 	private int GetLiveNbrs(int x, int y) {

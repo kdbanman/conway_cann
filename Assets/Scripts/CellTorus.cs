@@ -27,7 +27,6 @@ public class CellTorus : MonoBehaviour {
 	}
 
 	void Start () {
-		InitCells();
 	}
 
 	void Update() {

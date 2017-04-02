@@ -1,5 +1,17 @@
+# VSCode
 .vscode
 
+# Oculus
+Assets/OVR.meta
+Assets/OVR/
+Assets/OvrAvatar.meta
+Assets/OvrAvatar/
+Assets/Plugins.meta
+Assets/Plugins/
+Assets/Resources.meta
+Assets/Resources/
+
+# Unity
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/

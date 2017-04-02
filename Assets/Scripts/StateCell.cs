@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class StateCell : MonoBehaviour {
 
@@ -8,7 +6,7 @@ public class StateCell : MonoBehaviour {
 
 	public int x, y;
 
-	public void SetState(int state) {
+	public void SetState(float state) {
 		GetComponent<Renderer>().material = state == 1 ? liveMaterial : deadMaterial;
 	}
 }

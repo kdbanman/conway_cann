@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Conways {
+public class Conways : IAutomata {
 
 	private int width, height;
 
-	private int[,] env, nextEnv;
+	private float[,] env, nextEnv;
 
 	public Conways(int width, int height) {
 		this.width = width;
 		this.height = height;
 
-		env = new int[width, height];
-		nextEnv = new int[width, height];
+		env = new float[width, height];
+		nextEnv = new float[width, height];
 	}
 
 	public void Step() {
@@ -36,12 +36,12 @@ public class Conways {
 			}
 		}
 
-		int[,] tmpEnv = env;
+		float[,] tmpEnv = env;
 		env = nextEnv;
 		nextEnv = tmpEnv;
 	}
 
-	public int this[int x, int y] {
+	public float this[int x, int y] {
 		get {
 			return env[x, y];
 		}
@@ -71,13 +71,15 @@ public class Conways {
 			bottomIdx = 0;
 		}
 
-		return env[rightIdx, y] +
-		       env[rightIdx, topIdx] +
-			   env[x,        topIdx] +
-			   env[leftIdx,  topIdx] +
-			   env[leftIdx,  y] +
-			   env[leftIdx,  bottomIdx] +
-			   env[x,        bottomIdx] +
-			   env[rightIdx, bottomIdx];
+		return Mathf.RoundToInt(
+			env[rightIdx, y] +
+			env[rightIdx, topIdx] +
+			env[x,        topIdx] +
+			env[leftIdx,  topIdx] +
+			env[leftIdx,  y] +
+			env[leftIdx,  bottomIdx] +
+			env[x,        bottomIdx] +
+			env[rightIdx, bottomIdx]
+		);
 	}
 }

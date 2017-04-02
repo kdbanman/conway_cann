@@ -5,10 +5,10 @@ using UnityEngine;
 public class TouchScalable : MonoBehaviour {
 
 	private Vector3 lastGripLeftPosition, lastGripRightPosition;
-	
-	private int lastScaledFrame;
 
 	private bool leftGripDown, rightGripDown;
+	
+	private int lastScaledFrame;
 
 	void Update () {
 		float leftGrip = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, OVRInput.Controller.LTouch);

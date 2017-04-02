@@ -10,8 +10,6 @@ public class ReferenceEnvironment : MonoBehaviour {
 
 	public float cellSize, cellStride;
 
-	public GameObject cellPrefab;
-
 	public bool autoRun;
 
 	private GameObject[,] cells;
@@ -20,27 +18,14 @@ public class ReferenceEnvironment : MonoBehaviour {
 
 	void Start () {
 		conways = new Conways(width, height);
-		cells = new GameObject[width, height];
-
-		for (int x = 0; x < width; x ++) {
-			for (int y = 0; y < height; y++) {
-				GameObject cell = (GameObject)Instantiate(cellPrefab);
-				cells[x, y] = cell;
-				cell.GetComponent<StateCell>().x = x;
-				cell.GetComponent<StateCell>().y = y;
-				cell.transform.parent = this.transform;
-
-				cell.transform.localScale = new Vector3(cellSize, cellSize, cellSize / 3);
-				cell.transform.localPosition = new Vector3(x * cellStride, y * cellStride);
-			}
-		}
-
 
 		conways[12, 10] = 1;
 		conways[12, 11] = 1;
 		conways[12, 12] = 1;
 		conways[11, 12] = 1;
 		conways[10, 11] = 1;
+
+		GetComponent<CellTorus>().automata = conways;
 	}
 
 	void Update () {
@@ -54,12 +39,6 @@ public class ReferenceEnvironment : MonoBehaviour {
 					int y = clickedCell.y;
 					conways[x, y] = conways[x, y] == 0 ? 1 : 0;
 				}
-			}
-		}
-
-		for (int x = 0; x < width; x ++) {
-			for (int y = 0; y < height; y++) {
-				cells[x, y].GetComponent<StateCell>().SetState(conways[x, y]);
 			}
 		}
 

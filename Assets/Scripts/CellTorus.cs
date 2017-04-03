@@ -53,11 +53,14 @@ public class CellTorus : MonoBehaviour {
 			for (int y = 0; y < planeHeight; y++) {
 				GameObject cell = (GameObject)Instantiate(cellPrefab);
 				cells[x, y] = cell;
-				cell.GetComponent<StateCell>().x = x;
-				cell.GetComponent<StateCell>().y = y;
 				cell.transform.parent = this.transform;
 
 				PositionCell(cell, x, y, rotate: true);
+
+                StateCell stateCell = cell.GetComponent<StateCell>();
+                stateCell.x = x;
+                stateCell.y = y;
+				stateCell.onToggle = (cellX, cellY) => automata[cellX, cellY] = automata[cellX, cellY] == 1 ? 0 : 1;
 			}
 		}
 	}
@@ -86,7 +89,7 @@ public class CellTorus : MonoBehaviour {
 			Mathf.Cos(theta) * Mathf.Cos(phi),
 			Mathf.Sin(theta),
 			Mathf.Cos(theta) * Mathf.Sin(phi)
-		) * sliceRadius;
+		) * sliceRadius; 
 		Vector3 cellPosition = sliceCenter + sliceCenterToCell;
 
 		// Outermost is theta == 0

@@ -6,8 +6,6 @@ public class TouchScalable : MonoBehaviour {
 
 	private Vector3 lastGripLeftPosition, lastGripRightPosition;
 
-	private bool leftGripDown, rightGripDown;
-
 	private Transform ungrabbedParent;
 	private GameObject scaleCenter;
 	
@@ -18,7 +16,7 @@ public class TouchScalable : MonoBehaviour {
 		Vector3 gripLeftPosition = OVRInput.GetLocalControllerPosition(OVRInput.Controller.LTouch);
 		Vector3 gripRightPosition = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch);
 
-		if (leftGrip > 0.5 && rightGrip > 0.5) {
+		if (leftGrip > 0.5 && rightGrip > 0.5 && scaleCenter != null) {
 			Vector3 delta = gripRightPosition - gripLeftPosition;
 			Vector3 lastDelta = lastGripRightPosition - lastGripLeftPosition;
 
@@ -51,5 +49,6 @@ public class TouchScalable : MonoBehaviour {
 	private void ResetScaleCenter() {
 		transform.parent = ungrabbedParent;
 		ungrabbedParent = null;
+		Destroy(scaleCenter);
 	}
 }

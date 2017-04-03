@@ -5,4 +5,4 @@ cellular automatic neural network that learns the classic conway's ruleset
 
 ### TODO
 
-- grip-closed poke should trigger cell
+- speed the damned thing up. frames are so slow.

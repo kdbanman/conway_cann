@@ -6,7 +6,17 @@ public class StateCell : MonoBehaviour {
 
 	public int x, y;
 
+	public System.Action<int, int> onToggle;
+
 	public void SetState(float state) {
 		GetComponent<Renderer>().material = state == 1 ? liveMaterial : deadMaterial;
+	}
+
+	void OnTriggerEnter(Collider other) {
+		Debug.Log("Here");
+		CellToggleCollider toggler = other.gameObject.GetComponent<CellToggleCollider>();
+		if (toggler != null && onToggle != null) {
+			onToggle(x, y);
+		}
 	}
 }

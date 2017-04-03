@@ -13,7 +13,6 @@ public class StateCell : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		Debug.Log("Here");
 		CellToggleCollider toggler = other.gameObject.GetComponent<CellToggleCollider>();
 		if (toggler != null && onToggle != null) {
 			onToggle(x, y);

@@ -16,30 +16,44 @@ public class NeuralNetAutomata : AbstractAutomata {
 
 	public int HiddenDimIncludingBias { get; private set; }
 
-	public NeuralNetAutomata(int width, int height, int hiddenUnits = 3, int rngSeed = 7878) {
-		InitializeEnvironments(width, height);
+	public int rngSeed;
+	public float initializationMax;
 
-		HiddenDimIncludingBias = hiddenUnits + 1;
+	public NeuralNetAutomata(int width, int height, int hiddenUnits = 3, int rngSeed = 7878, float initializationMax = 0.1f)
+    {
+        InitializeEnvironments(width, height);
 
-		inputToHiddenWeights = new float[HiddenDimIncludingBias, INPUT_DIM_INCLUDING_BIAS];
-		hiddenToOutputWeights = new float[HiddenDimIncludingBias];
+        HiddenDimIncludingBias = hiddenUnits + 1;
 
-		previousForwardInput = new float[INPUT_DIM_INCLUDING_BIAS];
-		previousForwardHiddenState = new float[HiddenDimIncludingBias];
+        inputToHiddenWeights = new float[HiddenDimIncludingBias, INPUT_DIM_INCLUDING_BIAS];
+        hiddenToOutputWeights = new float[HiddenDimIncludingBias];
 
-		RandomizeWeights(rngSeed);
-	}
+        previousForwardInput = new float[INPUT_DIM_INCLUDING_BIAS];
+        previousForwardHiddenState = new float[HiddenDimIncludingBias];
 
-	public void RandomizeWeights(int rngSeed) {
+        if (this.rngSeed == 0)
+        {
+            this.rngSeed = rngSeed;
+        }
+
+        if (this.initializationMax == 0f)
+        {
+            this.initializationMax = initializationMax;
+        }
+
+        RandomizeWeights(rngSeed, initializationMax);
+    }
+
+    public void RandomizeWeights(int rngSeed, float initializationMax) {
 		Random.InitState(rngSeed);
 
 		int rows = inputToHiddenWeights.GetLength(0);
 		int cols = inputToHiddenWeights.GetLength(1);
 		for (int row = 0; row < rows; row++) {
 			for (int col = 0; col < cols; col++) {
-				inputToHiddenWeights[row, col] = Random.Range(0f, 0.1f);
+				inputToHiddenWeights[row, col] = Random.Range(0f, initializationMax);
 			}
-			hiddenToOutputWeights[row] = Random.Range(0f, 0.1f);
+			hiddenToOutputWeights[row] = Random.Range(0f, initializationMax);
 		}
 	}
 

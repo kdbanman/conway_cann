@@ -35,11 +35,11 @@
 		}
 	}
 
-	private int GetToroidalX(int x) {
+	protected int GetToroidalX(int x) {
 		return (x + width) % width;
 	}
 
-	private int GetToroidalY(int y) {
+	protected int GetToroidalY(int y) {
 		return (y + height) % height;
 	}
 }

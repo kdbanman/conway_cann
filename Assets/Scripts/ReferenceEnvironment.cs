@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ReferenceEnvironment : MonoBehaviour {
 
-	private Conways conways;
+	private ConwaysAutomata conways;
 
 	public int width, height;
 
@@ -15,7 +15,7 @@ public class ReferenceEnvironment : MonoBehaviour {
 	private int lastFrameTriggerStepped;
 
 	void Start () {
-		conways = new Conways(width, height);
+		conways = new ConwaysAutomata(width, height);
 
 		conways[12, 10] = 1;
 		conways[12, 11] = 1;

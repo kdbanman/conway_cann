@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class Conways : AbstractAutomata {
+public class ConwaysAutomata : AbstractAutomata {
 
-	public Conways(int width, int height) {
+	public ConwaysAutomata(int width, int height) {
 		InitializeEnvironments(width, height);
 	}
 

@@ -1,61 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Conways : IAutomata {
-
-	private int width, height;
-
-	private float[,] env, nextEnv;
+public class Conways : AbstractAutomata {
 
 	public Conways(int width, int height) {
-		this.width = width;
-		this.height = height;
-
-		env = new float[width, height];
-		nextEnv = new float[width, height];
+		InitializeEnvironments(width, height);
 	}
 
-	public void Step() {
-		for (int x = 0; x < width; x ++) {
-			for (int y = 0; y < height; y++) {
-				int liveNbrs = GetLiveNbrs(x, y);
-				if (env[x, y] == 0) {
-					if (liveNbrs == 3) {
-						nextEnv[x, y] = 1;
-					} else {
-						nextEnv[x, y] = 0;
-					}
-				} else {
-					if (liveNbrs == 2 || liveNbrs == 3) {
-						nextEnv[x, y] = 1;
-					} else {
-						nextEnv[x, y] = 0;
-					}
-				}
+	protected override float NextState(int x, int y) {
+		int liveNbrs = GetLiveNbrs(x, y);
+		if (env[x, y] == 0) {
+			if (liveNbrs == 3) {
+				return 1;
+			} else {
+				return 0;
+			}
+		} else {
+			if (liveNbrs == 2 || liveNbrs == 3) {
+				return 1;
+			} else {
+				return 0;
 			}
 		}
-
-		float[,] tmpEnv = env;
-		env = nextEnv;
-		nextEnv = tmpEnv;
-	}
-
-	public float this[int x, int y] {
-		get {
-			return env[GetToroidalX(x), GetToroidalY(y)];
-		}
-		set {
-			env[GetToroidalX(x), GetToroidalY(y)] = value;
-		}
-	}
-
-	private int GetToroidalX(int x) {
-		return (x + width) % width;
-	}
-
-	private int GetToroidalY(int y) {
-		return (y + height) % height;
 	}
 
 	private int GetLiveNbrs(int x, int y) {

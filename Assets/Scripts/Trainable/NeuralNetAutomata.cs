@@ -16,7 +16,13 @@ public class NeuralNetAutomata : AbstractAutomata {
 
 	public int HiddenDimIncludingBias { get; private set; }
 
-	public int rngSeed;
+    public override System.Action<int, int> onToggle {
+		get {
+			return (x, y) => env[x, y] = env[x, y] < 0.5f ? 1f : 0f;
+		}
+	}
+
+    public int rngSeed;
 	public float initializationMax;
 
 	public NeuralNetAutomata(int width, int height, int hiddenUnits = 3, int rngSeed = 7878, float initializationMax = 0.1f)

@@ -13,6 +13,7 @@
 	}
 
 	protected abstract float NextState(int x, int y);
+	public abstract System.Action<int, int> onToggle { get; }
 
 	public void Step() {
 		for (int x = 0; x < width; x ++) {

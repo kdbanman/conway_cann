@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class ConwaysAutomata : AbstractAutomata {
 
@@ -6,7 +7,11 @@ public class ConwaysAutomata : AbstractAutomata {
 		InitializeEnvironments(width, height);
 	}
 
-	protected override float NextState(int x, int y) {
+    public override Action<int, int> onToggle {
+		get { return (x, y) => env[x, y] = env[x, y] == 1 ? 0 : 1; }
+	}
+
+    protected override float NextState(int x, int y) {
 		int liveNbrs = GetLiveNbrs(x, y);
 		if (env[x, y] == 0) {
 			if (liveNbrs == 3) {

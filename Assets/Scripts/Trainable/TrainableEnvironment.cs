@@ -31,8 +31,8 @@ public class TrainableEnvironment : MonoBehaviour {
 		neuralAutomata[0, 0] = 1;
 		neuralAutomata[1, 0] = 1;
 
-		GetComponent<CellTorus>().SetPlaneSize(width, height);
 		GetComponent<CellTorus>().automata = neuralAutomata;
+		GetComponent<CellTorus>().SetPlaneSize(width, height);
 	}
 
 	void Update () {

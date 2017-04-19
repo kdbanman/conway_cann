@@ -31,7 +31,7 @@ public class CellTorus : MonoBehaviour {
 
 	void Update() {
 		if (automata == null) {
-			Debug.LogError("CellTorus automata is null.  Set it.");
+			Debug.LogError("CellTorus automata is null.  Set it before Update is called.");
 		}
 
 		for (int x = 0; x < planeWidth; x ++) {
@@ -47,6 +47,10 @@ public class CellTorus : MonoBehaviour {
 	}
 
 	private void InitCells() {
+		if (automata == null) {
+			Debug.LogError("CellTorus automata is null.  Set it before InitCells is called.");
+		}
+
 		cells = new GameObject[planeWidth, planeHeight];
 
 		for (int x = 0; x < planeWidth; x ++) {
@@ -60,7 +64,7 @@ public class CellTorus : MonoBehaviour {
                 StateCell stateCell = cell.GetComponent<StateCell>();
                 stateCell.x = x;
                 stateCell.y = y;
-				stateCell.onToggle = (cellX, cellY) => automata[cellX, cellY] = automata[cellX, cellY] == 1 ? 0 : 1;
+				stateCell.onToggle = automata.onToggle;
 			}
 		}
 	}

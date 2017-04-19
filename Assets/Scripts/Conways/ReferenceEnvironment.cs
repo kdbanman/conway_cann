@@ -27,8 +27,8 @@ public class ReferenceEnvironment : MonoBehaviour {
 		conways[0, 0] = 1;
 		conways[1, 0] = 1;
 
-		GetComponent<CellTorus>().SetPlaneSize(width, height);
 		GetComponent<CellTorus>().automata = conways;
+		GetComponent<CellTorus>().SetPlaneSize(width, height);
 	}
 
 	void Update () {

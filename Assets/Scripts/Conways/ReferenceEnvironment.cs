@@ -64,13 +64,13 @@ public class ReferenceEnvironment : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerEnter(Collider other) {
+	void OnTriggerStay(Collider other) {
 		TrainableEnvironment trainable = other.gameObject.GetComponent<TrainableEnvironment>();
 
 		if (trainable != null) {
 			SphereCollider thisCollider = GetComponent<SphereCollider>();
 			SphereCollider otherCollider = trainable.GetComponent<SphereCollider>();
-			
+
 			float thisColliderRadius = thisCollider.radius * Mathf.Max(thisCollider.transform.lossyScale.x, thisCollider.transform.lossyScale.y, thisCollider.transform.lossyScale.z);
 			float otherColliderRadius = otherCollider.radius * Mathf.Max(otherCollider.transform.lossyScale.x, otherCollider.transform.lossyScale.y, otherCollider.transform.lossyScale.z);
 
@@ -80,6 +80,7 @@ public class ReferenceEnvironment : MonoBehaviour {
 
 			float learningRate = Mathf.Min(intersectionFraction, 1f);
 
+			// TODO holy crap push this to a background thread.
 			trainable.TrainFrom(conways, intersectionFraction);
 		}
 	}

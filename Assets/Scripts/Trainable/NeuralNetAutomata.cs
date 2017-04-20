@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class NeuralNetAutomata : AbstractAutomata {
 
@@ -51,15 +52,15 @@ public class NeuralNetAutomata : AbstractAutomata {
     }
 
     public void RandomizeWeights(int rngSeed, float initializationMax) {
-		Random.InitState(rngSeed);
+		UnityEngine.Random.InitState(rngSeed);
 
 		int rows = inputToHiddenWeights.GetLength(0);
 		int cols = inputToHiddenWeights.GetLength(1);
 		for (int row = 0; row < rows; row++) {
 			for (int col = 0; col < cols; col++) {
-				inputToHiddenWeights[row, col] = Random.Range(0f, initializationMax);
+				inputToHiddenWeights[row, col] = UnityEngine.Random.Range(0f, initializationMax);
 			}
-			hiddenToOutputWeights[row] = Random.Range(0f, initializationMax);
+			hiddenToOutputWeights[row] = UnityEngine.Random.Range(0f, initializationMax);
 		}
 	}
 
@@ -83,25 +84,7 @@ public class NeuralNetAutomata : AbstractAutomata {
 
     private void SetInputTmp(int x, int y)
     {
-        int left = GetToroidalX(x - 1);
-		int right = GetToroidalX(x + 1);
-		int bottom = GetToroidalY(y - 1);
-		int top = GetToroidalY(y + 1);
-
-		// corner neighbors
-		previousForwardInput[0] = env[right, top];
-		previousForwardInput[1] = env[left,  top];
-		previousForwardInput[2] = env[left,  bottom];
-		previousForwardInput[3] = env[right, bottom];
-
-		// axial neighbors
-		previousForwardInput[4] = env[right, y];
-		previousForwardInput[5] = env[x,     top];
-		previousForwardInput[6] = env[left,  y];
-		previousForwardInput[7] = env[x,     bottom];
-
-		// self
-		previousForwardInput[8] = env[x, y];
+        FillSampleInputArray(x, y, previousForwardInput);
 
 		// bias.  setting every call is technically redundant but explicit.
 		previousForwardInput[9] = BIAS_ACTIVATION;
@@ -119,5 +102,18 @@ public class NeuralNetAutomata : AbstractAutomata {
     private float Sigmoid(float linearity)
     {
         return 1f / (1f + Mathf.Exp(-linearity));
+    }
+
+	// ///////////
+    //
+	// Training
+    //
+	// ///////////
+
+    internal void TrainFrom(TrainingBatch trainingBatch, float learningRate)
+    {
+		trainingBatch.ConsumeBatch((inputSample, outputSample) => {
+
+		});
     }
 }

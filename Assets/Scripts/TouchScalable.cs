@@ -36,14 +36,15 @@ public class TouchScalable : MonoBehaviour {
 		GrabHandCollider grabber = other.gameObject.GetComponent<GrabHandCollider>();
 		
 		if (grabber != null) {
-			switch (grabber.hand)
-			{
-				case GrabHandCollider.Hand.LEFT:
-					leftHandInCollider = false;
-					break;
-				case GrabHandCollider.Hand.RIGHT:
-					rightHandInCollider = false;
-					break;
+			float leftGrip = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, OVRInput.Controller.LTouch);
+			float rightGrip = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, OVRInput.Controller.RTouch);
+
+			// only let go if we've exited the trigger _and_ we've let go of the grip.
+			if (grabber.hand == GrabHandCollider.Hand.LEFT && leftGrip < 0.5f) {
+				leftHandInCollider = false;
+			}
+			if (grabber.hand == GrabHandCollider.Hand.RIGHT && rightGrip < 0.5f) {
+				rightHandInCollider = false;
 			}
 		}
 	}

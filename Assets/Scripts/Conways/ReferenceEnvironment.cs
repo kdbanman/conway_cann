@@ -63,4 +63,24 @@ public class ReferenceEnvironment : MonoBehaviour {
 			lastFrameTriggerStepped = Time.frameCount;
 		}
 	}
+
+	void OnTriggerEnter(Collider other) {
+		TrainableEnvironment trainable = other.gameObject.GetComponent<TrainableEnvironment>();
+
+		if (trainable != null) {
+			SphereCollider thisCollider = GetComponent<SphereCollider>();
+			SphereCollider otherCollider = trainable.GetComponent<SphereCollider>();
+			
+			float thisColliderRadius = thisCollider.radius * Mathf.Max(thisCollider.transform.lossyScale.x, thisCollider.transform.lossyScale.y, thisCollider.transform.lossyScale.z);
+			float otherColliderRadius = otherCollider.radius * Mathf.Max(otherCollider.transform.lossyScale.x, otherCollider.transform.lossyScale.y, otherCollider.transform.lossyScale.z);
+
+			float separationDistance = Vector3.Distance(thisCollider.transform.position, otherCollider.transform.position);
+			float intersectionDistance = thisColliderRadius + otherColliderRadius - separationDistance;
+			float intersectionFraction = intersectionDistance / otherColliderRadius;
+
+			float learningRate = Mathf.Min(intersectionFraction, 1f);
+
+			trainable.TrainFrom(conways, intersectionFraction);
+		}
+	}
 }

@@ -67,4 +67,10 @@ public class TrainableEnvironment : MonoBehaviour {
 			lastFrameTriggerStepped = Time.frameCount;
 		}
 	}
+
+	public void TrainFrom(AbstractAutomata targetAutomata, float learningRate) {
+		// if there is room in the training batch queue, push a bunch of samples in there.
+
+		// actually, I probably need AbstractAutomata to store its own queue of examples, because this class shouldn't be .Step()ing other environments.
+	}
 }

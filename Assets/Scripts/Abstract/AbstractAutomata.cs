@@ -1,4 +1,6 @@
-﻿public abstract class AbstractAutomata : IAutomata {
+﻿using UnityEngine;
+
+public abstract class AbstractAutomata : IAutomata {
 
 	protected int width, height;
 

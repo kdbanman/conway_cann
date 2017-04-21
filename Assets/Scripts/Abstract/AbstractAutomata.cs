@@ -15,7 +15,7 @@ public abstract class AbstractAutomata : IAutomata {
 		env = new float[width, height];
 		nextEnv = new float[width, height];
 
-		TrainingBatch = new TrainingBatch();
+		TrainingBatch = new TrainingBatch(500);
 	}
 
 	protected abstract float NextState(int x, int y);

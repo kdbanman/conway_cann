@@ -78,7 +78,7 @@ public class ReferenceEnvironment : MonoBehaviour {
 			float intersectionDistance = thisColliderRadius + otherColliderRadius - separationDistance;
 			float intersectionFraction = intersectionDistance / otherColliderRadius;
 
-			float learningRate = Mathf.Min(intersectionFraction, 1f);
+			float learningRate = Mathf.Min(intersectionFraction, 1f) * 0.01f;
 
 			// TODO holy crap push this to a background thread.
 			trainable.TrainFrom(conways, intersectionFraction);

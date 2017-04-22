@@ -69,7 +69,7 @@ public class ReferenceEnvironment : MonoBehaviour {
 			float learningRate = Mathf.Min(intersectionFraction, 1f) * 0.01f;
 
 			// TODO holy crap push this to a background thread.
-			trainable.TrainFrom(conways, intersectionFraction);
+			trainable.TrainFrom(conways, learningRate);
 		}
 	}
 }

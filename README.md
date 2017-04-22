@@ -5,7 +5,6 @@ cellular automatic neural network that learns the classic conway's ruleset
 
 ### TODO
 
-- cell poking touch collision appears to have stopped
 - make the neural net ring trainable (whee math!)
     - training sorta works now. should fix above and try more stuff to be sure.
 - train ring on touch while grabbing

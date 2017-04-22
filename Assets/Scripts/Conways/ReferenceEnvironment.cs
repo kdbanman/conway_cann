@@ -6,6 +6,8 @@ public class ReferenceEnvironment : MonoBehaviour {
 
 	private ConwaysAutomata conways;
 
+	private TrainableEnvironment currentlyTraining;
+
 	public int width, height;
 
 	public bool autoRun;
@@ -50,14 +52,30 @@ public class ReferenceEnvironment : MonoBehaviour {
 			conways.Step();
 			lastFrameTriggerStepped = Time.frameCount;
 		}
+
+		TrainIfPossible();
 	}
 
-	void OnTriggerStay(Collider other) {
+	void OnTriggerEnter(Collider other) {
 		TrainableEnvironment trainable = other.gameObject.GetComponent<TrainableEnvironment>();
 
 		if (trainable != null) {
+			currentlyTraining = trainable;
+		}
+	}
+
+	void OnTriggerExit(Collider other) {
+		TrainableEnvironment trainable = other.gameObject.GetComponent<TrainableEnvironment>();
+
+		if (trainable != null) {
+			currentlyTraining = null;
+		}
+	}
+
+	private void TrainIfPossible() {
+		if (currentlyTraining != null) {
 			SphereCollider thisCollider = GetComponent<SphereCollider>();
-			SphereCollider otherCollider = trainable.GetComponent<SphereCollider>();
+			SphereCollider otherCollider = currentlyTraining.GetComponent<SphereCollider>();
 
 			float thisColliderRadius = thisCollider.radius * Mathf.Max(thisCollider.transform.lossyScale.x, thisCollider.transform.lossyScale.y, thisCollider.transform.lossyScale.z);
 			float otherColliderRadius = otherCollider.radius * Mathf.Max(otherCollider.transform.lossyScale.x, otherCollider.transform.lossyScale.y, otherCollider.transform.lossyScale.z);
@@ -68,8 +86,7 @@ public class ReferenceEnvironment : MonoBehaviour {
 
 			float learningRate = Mathf.Min(intersectionFraction, 1f) * 0.01f;
 
-			// TODO holy crap push this to a background thread.
-			trainable.TrainFrom(conways, learningRate);
+			currentlyTraining.TrainFrom(conways, learningRate);
 		}
 	}
 }

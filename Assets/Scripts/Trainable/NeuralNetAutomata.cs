@@ -130,8 +130,8 @@ public class NeuralNetAutomata : AbstractAutomata {
 			return;
 		}
 		
-		Debug.Log("Batch size: " + trainingBatch.Size);
-        String costsTmp = "Costs: ";
+		FileLogger.Write("Batch size: " + trainingBatch.Size + "\n");
+        FileLogger.Write("Costs: ");
 
 		trainingBatch.ConsumeBatch((inputSample, knownOutput) => {
 			SetInputTmp(inputSample);
@@ -139,7 +139,7 @@ public class NeuralNetAutomata : AbstractAutomata {
 			float predictedOutput = ComputeOutputFromInputField();
 
 			float cost = (predictedOutput - knownOutput) * (predictedOutput - knownOutput);
-			costsTmp += cost.ToString("F2") + ", ";
+			FileLogger.Write(cost.ToString("F2") + ", ");
 			
 			// BEGIN tHE DERIVATIVES.  BYE READABILITY. 👋
 			float yp = predictedOutput;
@@ -174,7 +174,6 @@ public class NeuralNetAutomata : AbstractAutomata {
 				}
 			}
 		});
-
-		Debug.Log(costsTmp);
+		FileLogger.Write("\n");
     }
 }

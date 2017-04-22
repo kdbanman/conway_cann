@@ -36,8 +36,8 @@ public class TouchScalable : MonoBehaviour {
 		GrabHandCollider grabber = other.gameObject.GetComponent<GrabHandCollider>();
 		
 		if (grabber != null) {
-			float leftGrip = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, OVRInput.Controller.LTouch);
-			float rightGrip = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, OVRInput.Controller.RTouch);
+			float leftGrip = TouchInput.LeftGripSqueezeFraction;
+			float rightGrip = TouchInput.RightGripSqueezeFraction;
 
 			// only let go if we've exited the trigger _and_ we've let go of the grip.
 			if (grabber.hand == GrabHandCollider.Hand.LEFT && leftGrip < 0.5f) {
@@ -50,11 +50,11 @@ public class TouchScalable : MonoBehaviour {
 	}
 	
 	void Update () {
-		float leftGrip = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, OVRInput.Controller.LTouch);
-		float rightGrip = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, OVRInput.Controller.RTouch);
+		float leftGrip = TouchInput.LeftGripSqueezeFraction;
+		float rightGrip = TouchInput.RightGripSqueezeFraction;
 
-		Vector3 gripLeftPosition = OVRInput.GetLocalControllerPosition(OVRInput.Controller.LTouch);
-		Vector3 gripRightPosition = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch);
+		Vector3 gripLeftPosition = TouchInput.LeftControllerPosition;
+		Vector3 gripRightPosition = TouchInput.RightControllerPosition;
 
 		if (leftGrip > 0.5 && rightGrip > 0.5 && leftHandInCollider && rightHandInCollider && scaleCenter != null) {
 			leftGrabbedGlobal = true;

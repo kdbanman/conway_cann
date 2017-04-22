@@ -32,19 +32,6 @@ public class ReferenceEnvironment : MonoBehaviour {
 	}
 
 	void Update () {
-		if (Input.GetMouseButtonDown(0)) {
-			RaycastHit hit = new RaycastHit();
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			if (Physics.Raycast(ray, out hit)) {
-				StateCell clickedCell = hit.transform.gameObject.GetComponent<StateCell>();
-				if (clickedCell != null) {
-					int x = clickedCell.x;
-					int y = clickedCell.y;
-					conways[x, y] = conways[x, y] == 0 ? 1 : 0;
-				}
-			}
-		}
-
 		if (autoRun ||
 			Input.GetKey(KeyCode.Space) ||
 			Input.GetKeyDown(KeyCode.RightArrow) ||

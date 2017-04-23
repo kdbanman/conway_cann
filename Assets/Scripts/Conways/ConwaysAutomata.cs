@@ -8,22 +8,22 @@ public class ConwaysAutomata : AbstractAutomata {
 	}
 
     public override Action<int, int> onToggle {
-		get { return (x, y) => env[x, y] = env[x, y] == 1 ? 0 : 1; }
+		get { return (x, y) => env[x, y] = env[x, y] == 1 ? 0.5f : 1; }
 	}
 
     protected override float NextState(int x, int y) {
 		int liveNbrs = GetLiveNbrs(x, y);
-		if (env[x, y] == 0) {
-			if (liveNbrs == 3) {
-				return 1;
-			} else {
-				return 0;
-			}
-		} else {
+		if (env[x, y] == 1) {
 			if (liveNbrs == 2 || liveNbrs == 3) {
 				return 1;
 			} else {
-				return 0;
+				return 0.5f;
+			}
+		} else {
+			if (liveNbrs == 3) {
+				return 1;
+			} else {
+				return 0.5f;
 			}
 		}
 	}
@@ -49,15 +49,17 @@ public class ConwaysAutomata : AbstractAutomata {
 			bottomIdx = 0;
 		}
 
-		return Mathf.RoundToInt(
-			env[rightIdx, y] +
-			env[rightIdx, topIdx] +
-			env[x,        topIdx] +
-			env[leftIdx,  topIdx] +
-			env[leftIdx,  y] +
-			env[leftIdx,  bottomIdx] +
-			env[x,        bottomIdx] +
-			env[rightIdx, bottomIdx]
-		);
+		return IsLive(rightIdx, y) +
+			   IsLive(rightIdx, topIdx) +
+			   IsLive(x,        topIdx) +
+			   IsLive(leftIdx,  topIdx) +
+			   IsLive(leftIdx,  y) +
+			   IsLive(leftIdx,  bottomIdx) +
+			   IsLive(x,        bottomIdx) +
+			   IsLive(rightIdx, bottomIdx);
+	}
+
+	private int IsLive(int x, int y) {
+		return env[x, y] == 1 ? 1 : 0;
 	}
 }

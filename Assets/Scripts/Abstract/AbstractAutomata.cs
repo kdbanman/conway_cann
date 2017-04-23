@@ -15,11 +15,21 @@ public abstract class AbstractAutomata : IAutomata {
 		env = new float[width, height];
 		nextEnv = new float[width, height];
 
+		ResetEnvironment();
+
 		TrainingBatch = new TrainingBatch(500);
 	}
 
 	protected abstract float NextState(int x, int y);
 	public abstract System.Action<int, int> onToggle { get; }
+
+	public void ResetEnvironment() {
+		for (int x = 0; x < width; x ++) {
+			for (int y = 0; y < height; y++) {
+				env[x, y] = 0.5f;
+			}
+		}
+	}
 
 	public void Step() {
 		float[] sampleInputCache = new float[9];

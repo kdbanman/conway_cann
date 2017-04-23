@@ -20,7 +20,7 @@ public class NeuralNetAutomata : AbstractAutomata {
 
     public override System.Action<int, int> onToggle {
 		get {
-			return (x, y) => env[x, y] = env[x, y] < 0.5f ? 1f : 0f;
+			return (x, y) => env[x, y] = env[x, y] < 0.75f ? 1f : 0.5f;
 		}
 	}
 
@@ -130,50 +130,79 @@ public class NeuralNetAutomata : AbstractAutomata {
 			return;
 		}
 		
-		FileLogger.Write("Batch size: " + trainingBatch.Size + "\n");
-        FileLogger.Write("Costs: ");
+		FileLogger.WriteLine("Batch size: " + trainingBatch.Size + "\n");
+		FileLogger.WriteLine("Input --> Known Output,   Prediction,   Cost\n");
 
-		trainingBatch.ConsumeBatch((inputSample, knownOutput) => {
-			SetInputTmp(inputSample);
+		trainingBatch.ConsumeBatch((inputSample, knownOutput) =>
+        {
+            LogSample(inputSample, knownOutput);
 
-			float predictedOutput = ComputeOutputFromInputField();
+            SetInputTmp(inputSample);
+            float predictedOutput = ComputeOutputFromInputField();
 
-			float cost = (predictedOutput - knownOutput) * (predictedOutput - knownOutput);
-			FileLogger.Write(cost.ToString("F2") + ", ");
-			
-			// BEGIN tHE DERIVATIVES.  BYE READABILITY. 👋
-			float yp = predictedOutput;
-			float yt = knownOutput;
+            float cost = (predictedOutput - knownOutput) * (predictedOutput - knownOutput);
 
-			float di_yp = 2f * (yp - yt);
-			float di_zy = di_yp * yp * (1f - yp);
+            FileLogger.Write(predictedOutput.ToString("F1") + ",   ");
+            FileLogger.Write(cost.ToString("F2"));
 
-			float[] di_wh = new float[HiddenDimIncludingBias];
-			float[] di_h = new float[HiddenDimIncludingBias];
-			float[] di_zh = new float[HiddenDimIncludingBias];
-			for (int k = 0; k < HiddenDimIncludingBias; k++) {
-				float hk = previousForwardHiddenState[k];
-				float wk = hiddenToOutputWeights[k];
+            // BEGIN tHE DERIVATIVES.  BYE READABILITY. 👋
+            float yp = predictedOutput;
+            float yt = knownOutput;
 
-				di_wh[k] = di_zy * hk;
-				di_h[k] = di_zy * wk;
-				di_zh[k] = di_h[k] * hk * (1f - hk);
+            float di_yp = 2f * (yp - yt);
+            float di_zy = di_yp * yp * (1f - yp);
 
-				// gradient descent on hidden layer weights
-				hiddenToOutputWeights[k] = -learningRate * di_wh[k] * wk;
+            float[] di_wh = new float[HiddenDimIncludingBias];
+            float[] di_h = new float[HiddenDimIncludingBias];
+            float[] di_zh = new float[HiddenDimIncludingBias];
+            for (int k = 0; k < HiddenDimIncludingBias; k++)
+            {
+                float hk = previousForwardHiddenState[k];
+                float wk = hiddenToOutputWeights[k];
+
+                di_wh[k] = di_zy * hk;
+                di_h[k] = di_zy * wk;
+                di_zh[k] = di_h[k] * hk * (1f - hk);
+
+                // gradient descent on hidden layer weights
+                hiddenToOutputWeights[k] += -learningRate * di_wh[k] * wk;
+            }
+
+            float[,] di_w = new float[HiddenDimIncludingBias, INPUT_DIM_INCLUDING_BIAS];
+            for (int k = 0; k < HiddenDimIncludingBias; k++)
+            {
+                for (int i = 0; i < INPUT_DIM_INCLUDING_BIAS; i++)
+                {
+                    float xi = previousForwardInput[i];
+                    di_w[k, i] = di_zh[k] * xi;
+
+                    // gradient descent on input layer weights
+                    inputToHiddenWeights[k, i] += -learningRate * di_w[k, i] * inputToHiddenWeights[k, i];
+                }
+            }
+
+			FileLogger.Write("\n");
+        });
+    }
+
+    private static void LogSample(float[] inputSample, float knownOutput)
+    {
+        for (int i = 0; i < inputSample.Length; i++)
+        {
+			if (inputSample[i] > 0.5f) {
+				FileLogger.Write(" ");
 			}
-
-			float[,] di_w = new float[HiddenDimIncludingBias, INPUT_DIM_INCLUDING_BIAS];
-			for (int k = 0; k < HiddenDimIncludingBias; k++) {
-				for (int i = 0; i < INPUT_DIM_INCLUDING_BIAS; i++) {
-					float xi = previousForwardInput[i];
-					di_w[k, i] = di_zh[k] * xi;
-
-					// gradient descent on input layer weights
-					inputToHiddenWeights[k, i] = -learningRate * di_w[k, i] * inputToHiddenWeights[k, i];
-				}
+			else {
+				FileLogger.Write("X");				
 			}
-		});
-		FileLogger.Write("\n");
+        }
+        FileLogger.Write("--> ");
+
+		if (knownOutput > 0.5f) {
+			FileLogger.Write(" ,   ");
+		}
+		else {
+			FileLogger.Write("X,   ");				
+		}
     }
 }

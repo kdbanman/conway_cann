@@ -13,6 +13,8 @@ public class TrainableStateCell : StateCell {
 			GetComponent<Renderer>().material = renderedMaterial;
 		}
 
-		GetComponent<Renderer>().material.color = Color.Lerp(deadReferenceMaterial.color, liveReferenceMaterial.color, state);
+		// Map state from (0.5, 1) to (0, 1)
+		float fraction = 2f * state - 1;
+		GetComponent<Renderer>().material.color = Color.Lerp(deadReferenceMaterial.color, liveReferenceMaterial.color, fraction);
 	}
 }

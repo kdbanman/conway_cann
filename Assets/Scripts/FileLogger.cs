@@ -16,6 +16,10 @@ public class FileLogger : IDisposable {
 		}
 	}
 
+	public static void WriteLine(string str) {
+		Write(str + "\n");
+	}
+
     #region IDisposable Support
     private bool disposedValue = false; // To detect redundant calls
 

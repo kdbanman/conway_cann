@@ -165,7 +165,7 @@ public class NeuralNetAutomata : AbstractAutomata {
                 di_zh[k] = di_h[k] * hk * (1f - hk);
 
                 // gradient descent on hidden layer weights
-                hiddenToOutputWeights[k] += -learningRate * di_wh[k] * wk;
+                hiddenToOutputWeights[k] += -learningRate * di_wh[k];
             }
 
             float[,] di_w = new float[HiddenDimIncludingBias, INPUT_DIM_INCLUDING_BIAS];
@@ -177,7 +177,7 @@ public class NeuralNetAutomata : AbstractAutomata {
                     di_w[k, i] = di_zh[k] * xi;
 
                     // gradient descent on input layer weights
-                    inputToHiddenWeights[k, i] += -learningRate * di_w[k, i] * inputToHiddenWeights[k, i];
+                    inputToHiddenWeights[k, i] += -learningRate * di_w[k, i];
                 }
             }
 

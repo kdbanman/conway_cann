@@ -36,6 +36,10 @@ public class TrainableEnvironment : MonoBehaviour {
 	}
 
 	void Update () {
+		if (TouchInput.ButtonTwoPressed || TouchInput.ButtonFourPressed) {
+			neuralAutomata.ResetEnvironment();
+		}
+
 		if (autoRun ||
 			Input.GetKey(KeyCode.Space) ||
 			Input.GetKeyDown(KeyCode.RightArrow) ||

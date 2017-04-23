@@ -34,6 +34,10 @@ public class ReferenceEnvironment : MonoBehaviour {
 	}
 
 	void Update () {
+		if (TouchInput.ButtonTwoPressed || TouchInput.ButtonFourPressed) {
+			conways.ResetEnvironment();
+		}
+
 		if (autoRun ||
 			Input.GetKey(KeyCode.Space) ||
 			Input.GetKeyDown(KeyCode.RightArrow) ||

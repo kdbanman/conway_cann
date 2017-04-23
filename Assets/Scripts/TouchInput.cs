@@ -73,10 +73,30 @@ public class TouchInput
 		}
 	}
 
+	public static bool ButtonTwoPressed {
+		get {
+			#if UNITY_EDITOR_WIN
+			return OVRInput.GetDown(OVRInput.Button.Two);
+			#else
+			return false;
+			#endif
+		}
+	}
+
 	public static bool ButtonThreePressed {
 		get {
 			#if UNITY_EDITOR_WIN
 			return OVRInput.GetDown(OVRInput.Button.Three);
+			#else
+			return false;
+			#endif
+		}
+	}
+
+	public static bool ButtonFourPressed {
+		get {
+			#if UNITY_EDITOR_WIN
+			return OVRInput.GetDown(OVRInput.Button.Four);
 			#else
 			return false;
 			#endif

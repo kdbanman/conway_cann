@@ -24,14 +24,12 @@ public class BatchCostPanel : MonoBehaviour {
 		graphTexture = new Texture2D(historySize, costBins);
 		graphTexture.filterMode = FilterMode.Point;
 		GetComponent<Renderer>().material.mainTexture = graphTexture;
+		RenderGraph();
 	}
 
 	public void Add(float batchCost) {
 		costHistory.Enqueue(batchCost);
 		costHistory.Dequeue();
-	}
-
-	void Update() {
 		RenderGraph();
 	}
 

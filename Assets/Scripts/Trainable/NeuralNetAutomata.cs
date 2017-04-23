@@ -6,6 +6,9 @@ public class NeuralNetAutomata : AbstractAutomata {
 	private const int INPUT_DIM_INCLUDING_BIAS = 10;
 	private const float BIAS_ACTIVATION = 1f;
 
+    private int rngSeed;
+	private float initializationMax;
+
 	private float[,] inputToHiddenWeights;
 	private float[] hiddenToOutputWeights;
 
@@ -14,11 +17,17 @@ public class NeuralNetAutomata : AbstractAutomata {
 					previousForwardHiddenState;
 	private float previousForwardOutput;
 
+    // Batch weight corrections instantiated once for performance
+    private float[] hiddenToOutputCorrections;
+    private float[,] inputToHiddenCorrections;
+
     // public variables for setting in the unity editor
 	public int HiddenDimIncludingBias { get; private set; }
 
-    public int rngSeed;
-	public float initializationMax;
+    // public properties for rendering in the scene
+    public float PreviousMinBatchCost { get; private set; }
+    public float PreviousMaxBatchCost { get; private set; }
+    public float PreviousAvgBatchCost { get; private set; }
 
 	public NeuralNetAutomata(int width, int height, int hiddenUnits = 3, int rngSeed = 7878, float initializationMax = 0.1f)
     {
@@ -31,6 +40,9 @@ public class NeuralNetAutomata : AbstractAutomata {
 
         previousForwardInput = new float[INPUT_DIM_INCLUDING_BIAS];
         previousForwardHiddenState = new float[HiddenDimIncludingBias];
+
+        hiddenToOutputCorrections = new float[HiddenDimIncludingBias];
+        inputToHiddenCorrections = new float[HiddenDimIncludingBias, INPUT_DIM_INCLUDING_BIAS];
 
         if (this.rngSeed == 0)
         {
@@ -132,7 +144,16 @@ public class NeuralNetAutomata : AbstractAutomata {
 		FileLogger.WriteLine("Batch size: " + trainingBatch.Size + "\n");
 		FileLogger.WriteLine("Input --> Known Output,   Prediction,   Cost\n");
 
-		trainingBatch.ConsumeBatch((inputSample, knownOutput) =>
+        for (int k = 0; k < HiddenDimIncludingBias; k++) {
+            hiddenToOutputCorrections[k] = 0;
+            for (int i = 0; i < INPUT_DIM_INCLUDING_BIAS; i++) {
+                inputToHiddenCorrections[k, i] = 0;
+            }
+        }
+        // This is stored here because after the batch is consumed, its size will be zero.
+        int trainingBatchSize = trainingBatch.Size;
+
+		trainingBatch.ConsumeBatch((inputSample, knownOutput, sampleNumber) =>
         {
             LogSample(inputSample, knownOutput);
 
@@ -140,6 +161,10 @@ public class NeuralNetAutomata : AbstractAutomata {
             float predictedOutput = ComputeOutputFromInputField();
 
             float cost = (predictedOutput - knownOutput) * (predictedOutput - knownOutput);
+
+            PreviousMinBatchCost = Mathf.Min(PreviousMinBatchCost, cost);
+            PreviousMaxBatchCost = Mathf.Max(PreviousMaxBatchCost, cost);
+            PreviousAvgBatchCost += cost;
 
             FileLogger.Write(predictedOutput.ToString("F1") + ",   ");
             FileLogger.Write(cost.ToString("F2"));
@@ -165,6 +190,7 @@ public class NeuralNetAutomata : AbstractAutomata {
 
                 // gradient descent on hidden layer weights
                 hiddenToOutputWeights[k] += -learningRate * di_wh[k];
+                // hiddenToOutputCorrections[k] += di_wh[k];
             }
 
             float[,] di_w = new float[HiddenDimIncludingBias, INPUT_DIM_INCLUDING_BIAS];
@@ -177,11 +203,21 @@ public class NeuralNetAutomata : AbstractAutomata {
 
                     // gradient descent on input layer weights
                     inputToHiddenWeights[k, i] += -learningRate * di_w[k, i];
+                    // inputToHiddenCorrections[k, i] += di_w[k, i];
                 }
             }
 
 			FileLogger.Write("\n");
         });
+
+        // for (int k = 0; k < HiddenDimIncludingBias; k++) {
+        //     hiddenToOutputWeights[k] += -learningRate * hiddenToOutputCorrections[k] / trainingBatchSize;
+        //     for (int i = 0; i < INPUT_DIM_INCLUDING_BIAS; i++) {
+        //         inputToHiddenWeights[k, i] += -learningRate * inputToHiddenCorrections[k, i] / trainingBatchSize;
+        //     }
+        // }
+
+        PreviousAvgBatchCost /= trainingBatchSize;
     }
 
     private static void LogSample(float[] inputSample, float knownOutput)

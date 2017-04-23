@@ -41,10 +41,11 @@
 		nextSampleIndex++;
 	}
 
-	public void ConsumeBatch(System.Action<float[], float> processSample) {
+	public void ConsumeBatch(System.Action<float[], float, int> processSample) {
+		int sampleNumber = 0;
 		while (!Empty) {
 			nextSampleIndex--;
-			processSample(inputTensor[nextSampleIndex], outputList[nextSampleIndex]);
+			processSample(inputTensor[nextSampleIndex], outputList[nextSampleIndex], sampleNumber);
 		}
 	}
 }

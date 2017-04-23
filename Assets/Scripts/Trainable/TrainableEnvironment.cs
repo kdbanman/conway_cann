@@ -14,6 +14,8 @@ public class TrainableEnvironment : MonoBehaviour {
 
 	public float initializationMax;
 
+	public GameObject batchCostPanel;
+
 	private GameObject[,] cells;
 
 	private int lastFrameTriggerStepped;
@@ -62,5 +64,6 @@ public class TrainableEnvironment : MonoBehaviour {
 
 	public void TrainFrom(AbstractAutomata targetAutomata, float learningRate) {
 		neuralAutomata.TrainFrom(targetAutomata.TrainingBatch, learningRate);
+		batchCostPanel.GetComponent<BatchCostPanel>().Add(neuralAutomata.PreviousAvgBatchCost);
 	}
 }

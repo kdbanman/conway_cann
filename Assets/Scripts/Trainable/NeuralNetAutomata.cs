@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class NeuralNetAutomata : AbstractAutomata {
-
-	// 8 neighbors, 1 self, and 1 bias
 	private const int INPUT_DIM_INCLUDING_BIAS = 10;
 	private const float BIAS_ACTIVATION = 1f;
 
@@ -16,13 +14,8 @@ public class NeuralNetAutomata : AbstractAutomata {
 					previousForwardHiddenState;
 	private float previousForwardOutput;
 
+    // public variables for setting in the unity editor
 	public int HiddenDimIncludingBias { get; private set; }
-
-    public override System.Action<int, int> onToggle {
-		get {
-			return (x, y) => env[x, y] = env[x, y] < 0.75f ? 1f : 0.5f;
-		}
-	}
 
     public int rngSeed;
 	public float initializationMax;
@@ -65,6 +58,12 @@ public class NeuralNetAutomata : AbstractAutomata {
 		}
 	}
 
+    public override System.Action<int, int> onToggle {
+		get {
+			return (x, y) => env[x, y] = env[x, y] < 0.75f ? 1f : 0.5f;
+		}
+	}
+
 	protected override float NextState(int x, int y) {
 		SetInputTmp(x, y);
 
@@ -92,7 +91,7 @@ public class NeuralNetAutomata : AbstractAutomata {
     {
         FillSampleInputArray(x, y, previousForwardInput);
 
-		// bias.  setting every call is technically redundant but explicit.
+		// setting every call is technically redundant but explicit.
 		previousForwardInput[INPUT_DIM_INCLUDING_BIAS - 1] = BIAS_ACTIVATION;
     }
 

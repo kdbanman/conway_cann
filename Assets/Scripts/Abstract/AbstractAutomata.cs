@@ -29,7 +29,7 @@ public abstract class AbstractAutomata : IAutomata {
 
 		ResetEnvironment();
 
-		TrainingBatch = new TrainingBatch(500);
+		TrainingBatch = new TrainingBatch(1500);
 	}
 
 	protected abstract float NextState(int x, int y);

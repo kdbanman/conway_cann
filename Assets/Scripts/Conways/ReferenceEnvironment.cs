@@ -38,17 +38,19 @@ public class ReferenceEnvironment : MonoBehaviour {
 			conways.ResetEnvironment();
 		}
 
-		if (Input.GetKeyDown(KeyCode.Q)) {
-			float[,] toMirror = EnvironmentStatePresets.Get("Glider Land");
+		if (Input.GetKeyDown(KeyCode.A))
+        {
+            float[,] toMirror = EnvironmentStatePresets.Get("Glider Land");
+            MirrorEnvironment(toMirror);
+        }
 
-			width = toMirror.GetLength(0);
-			height = toMirror.GetLength(1);
-			conways = new ConwaysAutomata(toMirror);
-			GetComponent<CellTorus>().SetPlaneSize(width, height);
-			GetComponent<CellTorus>().automata = conways;
-		}
+		if (Input.GetKeyDown(KeyCode.O))
+        {
+            float[,] toMirror = EnvironmentStatePresets.Get("Gabriel's P138");
+            MirrorEnvironment(toMirror);
+        }
 
-		if (autoRun ||
+        if (autoRun ||
 			Input.GetKey(KeyCode.Space) ||
 			Input.GetKeyDown(KeyCode.RightArrow) ||
 			TouchInput.ButtonOnePressed ||
@@ -70,7 +72,16 @@ public class ReferenceEnvironment : MonoBehaviour {
 		TrainIfPossible();
 	}
 
-	void OnTriggerEnter(Collider other) {
+    private void MirrorEnvironment(float[,] toMirror)
+    {
+        width = toMirror.GetLength(0);
+        height = toMirror.GetLength(1);
+        conways = new ConwaysAutomata(toMirror);
+        GetComponent<CellTorus>().SetPlaneSize(width, height);
+        GetComponent<CellTorus>().automata = conways;
+    }
+
+    void OnTriggerEnter(Collider other) {
 		TrainableEnvironment trainable = other.gameObject.GetComponent<TrainableEnvironment>();
 
 		if (trainable != null) {

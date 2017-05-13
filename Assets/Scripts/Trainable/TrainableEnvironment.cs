@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -42,14 +43,16 @@ public class TrainableEnvironment : MonoBehaviour {
 			neuralAutomata.ResetEnvironment();
 		}
 
-		if (Input.GetKeyDown(KeyCode.Q)) {
+		if (Input.GetKeyDown(KeyCode.A)) {
 			float[,] toMirror = EnvironmentStatePresets.Get("Glider Land");
-
-			width = toMirror.GetLength(0);
-			height = toMirror.GetLength(1);
-			neuralAutomata.MirrorEnvironment(toMirror);
-			GetComponent<CellTorus>().SetPlaneSize(width, height);
+			MirrorEnvironment(toMirror);
 		}
+
+		if (Input.GetKeyDown(KeyCode.O))
+        {
+            float[,] toMirror = EnvironmentStatePresets.Get("Gabriel's P138");
+            MirrorEnvironment(toMirror);
+        }
 
 		if (autoRun ||
 			Input.GetKey(KeyCode.Space) ||
@@ -71,7 +74,15 @@ public class TrainableEnvironment : MonoBehaviour {
 		}
 	}
 
-	public void TrainFrom(AbstractAutomata targetAutomata, float learningRate) {
+    private void MirrorEnvironment(float[,] toMirror)
+    {
+		width = toMirror.GetLength(0);
+		height = toMirror.GetLength(1);
+		neuralAutomata.MirrorEnvironment(toMirror);
+		GetComponent<CellTorus>().SetPlaneSize(width, height);
+    }
+
+    public void TrainFrom(AbstractAutomata targetAutomata, float learningRate) {
 		neuralAutomata.TrainFrom(targetAutomata.TrainingBatch, learningRate);
 		batchCostPanel.GetComponent<BatchCostPanel>().Add(neuralAutomata.PreviousAvgBatchCost);
 	}

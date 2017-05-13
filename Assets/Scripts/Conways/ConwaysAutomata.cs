@@ -3,7 +3,12 @@ using UnityEngine;
 
 public class ConwaysAutomata : AbstractAutomata {
 
-	public ConwaysAutomata(int width, int height) {
+    public ConwaysAutomata(float[,] toMirror)
+    {
+        MirrorEnvironment(toMirror);
+    }
+
+    public ConwaysAutomata(int width, int height) {
 		InitializeEnvironments(width, height);
 	}
 

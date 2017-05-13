@@ -42,6 +42,15 @@ public class TrainableEnvironment : MonoBehaviour {
 			neuralAutomata.ResetEnvironment();
 		}
 
+		if (Input.GetKeyDown(KeyCode.Q)) {
+			float[,] toMirror = EnvironmentStatePresets.Get("Glider Land");
+
+			width = toMirror.GetLength(0);
+			height = toMirror.GetLength(1);
+			neuralAutomata.MirrorEnvironment(toMirror);
+			GetComponent<CellTorus>().SetPlaneSize(width, height);
+		}
+
 		if (autoRun ||
 			Input.GetKey(KeyCode.Space) ||
 			Input.GetKeyDown(KeyCode.RightArrow) ||

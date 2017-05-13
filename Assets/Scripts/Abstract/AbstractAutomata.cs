@@ -8,6 +8,18 @@ public abstract class AbstractAutomata : IAutomata {
 
 	public TrainingBatch TrainingBatch { get; private set; }
 
+    public void MirrorEnvironment(float[,] toMirror)
+    {
+        InitializeEnvironments(toMirror.GetLength(0), toMirror.GetLength(1));
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                env[x, y] = toMirror[x, y];
+            }
+        }
+    }
+
 	protected void InitializeEnvironments(int width, int height) {
 		this.width = width;
 		this.height = height;

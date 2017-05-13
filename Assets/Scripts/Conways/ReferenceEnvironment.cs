@@ -38,6 +38,16 @@ public class ReferenceEnvironment : MonoBehaviour {
 			conways.ResetEnvironment();
 		}
 
+		if (Input.GetKeyDown(KeyCode.Q)) {
+			float[,] toMirror = EnvironmentStatePresets.Get("Glider Land");
+
+			width = toMirror.GetLength(0);
+			height = toMirror.GetLength(1);
+			conways = new ConwaysAutomata(toMirror);
+			GetComponent<CellTorus>().SetPlaneSize(width, height);
+			GetComponent<CellTorus>().automata = conways;
+		}
+
 		if (autoRun ||
 			Input.GetKey(KeyCode.Space) ||
 			Input.GetKeyDown(KeyCode.RightArrow) ||
